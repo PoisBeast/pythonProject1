@@ -34,11 +34,11 @@ class SQLServer:
 
 def main(starDate,endDate):
     msg = SQLServer(server="47.98.176.103", user="sa", password="QAZwsx123!@#", database="CnYiu_HDTFBA")
-    if len(starDate)!=0 and len(endDate)!=0:
+    if len(starDate)>5 and len(endDate)>5:
         result = msg.ExecQuery(
-            "SELECT TOP 1 * FROM kpfp WHERE ysyf = '应收'" + " and fprq >= " + starDate + " and fprq <= " + endDate+"")
+            "SELECT TOP 2 * FROM kpfp WHERE ysyf = '应收'" + " and fprq >= " + starDate + " and fprq <= " + endDate+"")
     else:
-        result = msg.ExecQuery("SELECT TOP 1 * FROM kpfp WHERE ysyf = '应收'")
+        result = msg.ExecQuery("SELECT  column_name  FROM  information_schema.columns  WHERE  table_name = 'kpfp'")
     for (Value) in result:
         print(Value)
 
