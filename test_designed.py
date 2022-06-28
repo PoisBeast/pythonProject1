@@ -186,4 +186,5 @@ class Ui_mytest(object):
             self.endday = self.dateEdit_2.date().day()
             endDate = "'" + str(self.endyear) + "-" + str(self.endmonth) + "-" + str(self.endday) + "'"
             # print(self.endDate)
-        shujuku2.main(starDate, endDate)
+        kk = shujuku2.main(starDate, endDate)
+        print(type(kk))

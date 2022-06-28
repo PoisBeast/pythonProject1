@@ -40,7 +40,7 @@ def main(starDate,endDate):
     else:
         result = msg.ExecQuery("SELECT  column_name  FROM  information_schema.columns  WHERE  table_name = 'kpfp'")
     for (Value) in result:
-        print(Value)
+        return Value
 
 if __name__ == '__main__':
     main()

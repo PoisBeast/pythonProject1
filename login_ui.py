@@ -92,7 +92,7 @@ class LoginForm(QWidget):
         self.move(qr.topLeft())
 
 
-# if __name__ == "__main__":
-#     app = QApplication(sys.argv)
-#     ex = LoginForm()
-#     sys.exit(app.exec_())
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    ex = LoginForm()
+    sys.exit(app.exec_())
