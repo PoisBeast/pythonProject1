@@ -36,15 +36,87 @@ class MainWindow(QWidget):
  #宁波知马国际物流有限公司
         self.web_browser.page().toPlainText(lambda x: print(x))
         self.web_browser.page().toHtml(lambda x: print(x))
-        self.web_browser.page().runJavaScript('''function getname(){
-        document.querySelector("#invoice-make-inner > tbody > tr > td:nth-child(2) > div:nth-child(1) > span > i").click();
-        setTimeout(() => {document.querySelector("#searchName").value="宁波知马国际物流有限公司"}, 100);
-        setTimeout(() => {document.querySelector("#standard-table > div > div > div > div > div > div > div.ant-table-body > table > tbody > tr:nth-child(1) > td:nth-child(3) > a").click()}, 200);
-        setTimeout(() => {document.querySelector("#invoice-body > div.invoice-inner_1Z0ha > div.ant-table-wrapper.content_16ZIR > div > div > div > div > div.ant-table-body > table > tbody > tr:nth-child(1) > td:nth-child(2) > div > div > div > div > ul > li > div > input").click()}, 350);
-        setTimeout(() => {document.querySelector("#invoice-body > div.invoice-inner_1Z0ha > div.ant-table-wrapper.content_16ZIR > div > div > div > div > div.ant-table-body > table > tbody > tr.ant-table-row.s-crt.ant-table-row-level-0 > td:nth-child(2) > div > i").click()}, 400);
-        setTimeout(() => {document.querySelector("#standard-table > div > div > div > div > div > div > div.ant-table-body > table > tbody > tr:nth-child(1) > td:nth-child(8) > a").click()}, 550);
-        };
-        getname();''')
+        self.web_browser.page().runJavaScript('''function getconames(){
+let inputs =document.querySelector("#buyername");
+//let lastValue = input.value;
+inputs.value = '宁波知马国际物流有限公司';
+let event = new Event('input', { bubbles: true });
+let tracker = inputs._valueTracker;
+if (tracker) {
+  tracker.setValue('');//上面文章的原代码其实用的是 lastValue 参数，但是我觉得好像没啥用，就直接使用空字符串代替
+}
+inputs.dispatchEvent(event);
+setTimeout(() => {getconame(inputs)}, 600);};
+function getconame(inputs){
+var inpEle = inputs;
+//inpEle.value = '宁波知马国际物流有限公司'  //仅仅是模拟回车，则不需要这样，这样给input框设置值也是不生效的，正确给input设置值的方式参考上面的
+// 模拟回车
+var events = document.createEvent('Event');
+events.initEvent('keydown', true, false);   //注意这块触发的是keydown事件，在awx的ui源码中bind监控的是keypress事件，所以这块要改成keypress
+events = Object.assign(events, {
+  ctrlKey: false,
+  metaKey: false,
+  altKey: false,
+  which: 13,
+  keyCode: 13,
+  key: 'Enter',
+  code: 'Enter'
+});
+inpEle.focus();
+inpEle.dispatchEvent(events);};
+function getdingyi(){
+var inputs=new Array("#invoice-body > div.invoice-inner_1Z0ha > div.ant-table-wrapper.content_16ZIR > div > div > div > div > div.ant-table-body > table > tbody > tr:nth-child(1) > td:nth-child(2) > div > div > div > div > ul > li > div > input","#invoice-body > div.invoice-inner_1Z0ha > div.ant-table-wrapper.content_16ZIR > div > div > div > div > div.ant-table-body > table > tbody > tr:nth-child(1) > td:nth-child(3) > div > input","#invoice-body > div.invoice-inner_1Z0ha > div.ant-table-wrapper.content_16ZIR > div > div > div > div > div.ant-table-body > table > tbody > tr:nth-child(1) > td:nth-child(4) > div > input","#num","#price");
+var values=new Array("软件服务费","1","1","2","2");
+let inputitem=document.querySelector(inputs[0]);
+inputitem.value=values[0];
+let event = new Event('input', { bubbles: true });
+let tracker = inputitem._valueTracker;
+if (tracker) {
+  tracker.setValue('');//上面文章的原代码其实用的是 lastValue 参数，但是我觉得好像没啥用，就直接使用空字符串代替
+}
+inputitem.dispatchEvent(event);
+setTimeout(() => {getname()}, 200);
+setTimeout(() => {getnames(inputs,values)}, 400);
+};
+function getnames(inputs,values){
+for(var i = 1; i < inputs.length; i++){
+let inputitem=document.querySelector(inputs[i]);
+inputitem.value=values[i];
+let event = new Event('input', { bubbles: true });
+let tracker = inputitem._valueTracker;
+if (tracker) {
+  tracker.setValue('');//上面文章的原代码其实用的是 lastValue 参数，但是我觉得好像没啥用，就直接使用空字符串代替
+}
+inputitem.dispatchEvent(event);
+if(i<4 &&i >0){
+  document.querySelector(inputs[i+1]).click();
+}
+if(i==4){
+  document.querySelector("#price").click();
+  document.querySelector("#num").click();
+}
+}};
+function getname(){
+var inpEle = document.querySelector("#invoice-body > div.invoice-inner_1Z0ha > div.ant-table-wrapper.content_16ZIR > div > div > div > div > div.ant-table-body > table > tbody > tr:nth-child(1) > td:nth-child(2) > div > div > div > div > ul > li > div > input");
+//inpEle.value = '宁波知马国际物流有限公司'  //仅仅是模拟回车，则不需要这样，这样给input框设置值也是不生效的，正确给input设置值的方式参考上面的
+// 模拟回车
+var events = document.createEvent('Event');
+events.initEvent('keydown', true, false);   //注意这块触发的是keydown事件，在awx的ui源码中bind监控的是keypress事件，所以这块要改成keypress
+events = Object.assign(events, {
+  ctrlKey: false,
+  metaKey: false,
+  altKey: false,
+  which: 13,
+  keyCode: 13,
+  key: 'Enter',
+  code: 'Enter'
+});
+inpEle.focus();
+inpEle.dispatchEvent(events);};
+getconames();
+setTimeout(() => {getdingyi()}, 600);
+setTimeout(() => {document.querySelector("#invoice-body > div.invoice-inner_1Z0ha > div.ant-table-wrapper.content_16ZIR > div > div > div > div > div.ant-table-body > table > tbody > tr.ant-table-row.s-crt.ant-table-row-level-0 > td:nth-child(10) > div > li > i").click()},1200);
+''')
 
     def getCookieRunJs(self):
         runJs = '''

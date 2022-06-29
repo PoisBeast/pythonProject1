@@ -32,15 +32,34 @@ class SQLServer:
         self.conn.close()
         return result
 
+    def ExecQuerys(self,sql):
+        '''
+        执行查询语句
+        返回一个包含tuple的list，list是元素的记录行，tuple记录每行的字段数值
+        '''
+        cur = self.__GetConnect()
+        cur.execute(sql) # 执行查询语句
+        result = cur.fetchall() # fetchall()获取查询结果
+        # 查询完毕关闭数据库连接
+        self.conn.close()
+        return result
+
 def main(starDate,endDate):
     msg = SQLServer(server="47.98.176.103", user="sa", password="QAZwsx123!@#", database="CnYiu_HDTFBA")
     if len(starDate)>5 and len(endDate)>5:
         result = msg.ExecQuery(
-            "SELECT TOP 2 * FROM kpfp WHERE ysyf = '应收'" + " and fprq >= " + starDate + " and fprq <= " + endDate+"")
+            "SELECT wlhmc,fph,fprq,sjje,fpbz,fpid FROM kpfp WHERE ysyf = '应收'" + " and fprq >= " + starDate + " and fprq <= " + endDate+"")
     else:
         result = msg.ExecQuery("SELECT  column_name  FROM  information_schema.columns  WHERE  table_name = 'kpfp'")
-    for (Value) in result:
-        return Value
+    return result
+    # result = msg.ExecQuery("select TOP 2 * from kpyf where fpid='20200924203319330' and ysyf='应收'")
+    # for (Value) in result:
+    #     print(Value)
 
-if __name__ == '__main__':
-    main()
+def mains(content):
+    msg = SQLServer(server="47.98.176.103", user="sa", password="QAZwsx123!@#", database="CnYiu_HDTFBA")
+    if len(content)>1:
+        result = msg.ExecQuery("SELECT fymc,bz,jg,sl,wlhmc FROM  kpyf WHERE ysyf = '应收' and fpid = "+content+"")
+    else:
+        result = msg.ExecQuery("SELECT  column_name  FROM  information_schema.columns  WHERE  table_name = 'kpfp'")
+    return result

@@ -34,9 +34,13 @@ class SQLServer:
 
 def main():
     msg = SQLServer(server="47.98.176.103", user="sa", password="QAZwsx123!@#", database="CnYiu_HDTFBA")
-    result = msg.ExecQuery("SELECT  TOP 2 *  FROM  kpyf  WHERE  fpid = '20200924203319330'")
-    for (Value) in result:
-        print(Value)
+    result = msg.ExecQuery("SELECT fymc,bz,jg,sl,wlhmc  FROM  kpyf  WHERE ysyf = '应收' and fpid = "+'20200924203319330'+"")
+    #result = msg.ExecQuery("SELECT  * FROM kpfp WHERE ysyf = '应收'")
+
+    #result = msg.ExecQuery("SELECT  column_name  FROM  information_schema.columns  WHERE  table_name = 'kpyf'")
+    print(result)
+    # for (Value) in result:
+    #     print(Value)
 
 if __name__ == '__main__':
     main()
