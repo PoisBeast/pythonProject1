@@ -34,8 +34,8 @@ class MainWindow(QWidget):
         # self.web_browser.page().runJavaScript(runjss, self.getHeadersByJs)
         # self.web_browser.page().runJavaScript(runJs, self.getCookieByJs)
  #宁波知马国际物流有限公司
-        self.web_browser.page().toPlainText(lambda x: print(x))
-        self.web_browser.page().toHtml(lambda x: print(x))
+        #self.web_browser.page().toPlainText(lambda x: print(x))
+        #self.web_browser.page().toHtml(lambda x: print(x))
         self.web_browser.page().runJavaScript('''function getconames(){
 let inputs =document.querySelector("#buyername");
 //let lastValue = input.value;
