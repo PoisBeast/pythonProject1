@@ -9,14 +9,14 @@
 import time
 from datetime import date
 from this import s
-
-from PyQt5.QtWidgets import QAbstractItemView, QTableWidgetItem
+import sqlite3
+from PyQt5.QtWebChannel import QWebChannel
+from PyQt5.QtWidgets import QAbstractItemView, QTableWidgetItem, QMessageBox
 
 import shujuku2
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import QUrl, QDate
+from PyQt5.QtCore import QUrl, QDate, QObject, pyqtSignal, pyqtSlot
 from PyQt5.QtWebEngineWidgets import *
-
 
 class Ui_mytest(object):
     def setupUi(self, mytest):
@@ -223,6 +223,8 @@ class Ui_mytest(object):
             prinTed = "'true'"
         else:
             prinTed = "'false'"
+        starDate="'2020-01-01'"
+        endDate="'2022-01-01'"
         kk = shujuku2.main(starDate, endDate, prinTed)
         self.tableWidget.setRowCount(len(kk))
         for i in range(0, len(kk)):
@@ -286,13 +288,16 @@ document.querySelector(".nuomiInvoiceFont.nuomi-icon-zhipu.inner-style.p-color")
                       });
                       inpEle.focus();
                       inpEle.dispatchEvent(events);};
-                      getconames()''')
+                      getconames();''')
+        self.aa(moneylist)
+    def aa(self,moneylist):
         for i in range(len(moneylist)):
             k = str(i + 1)
             self.browser.page().runJavaScript('''
                 function getdingyi(){
                 var inputs=new Array("#invoice-body > div.invoice-inner_1Z0ha > div.ant-table-wrapper.content_16ZIR > div > div > div > div > div.ant-table-body > table > tbody > tr:nth-child(''' + k + ''') > td:nth-child(2) > div > div > div > div > ul > li > div > input","#invoice-body > div.invoice-inner_1Z0ha > div.ant-table-wrapper.content_16ZIR > div > div > div > div > div.ant-table-body > table > tbody > tr:nth-child(''' + k + ''') > td:nth-child(5) > div > input","#invoice-body > div.invoice-inner_1Z0ha > div.ant-table-wrapper.content_16ZIR > div > div > div > div > div.ant-table-body > table > tbody > tr:nth-child(''' + k + ''') > td:nth-child(6) > div > input",);
                 var values=new Array("''' + moneylist[i][0] + '''","''' + moneylist[i][3] + '''","''' + moneylist[i][2] + '''");
+                var a = '''+k+''';
                 let inputitem=document.querySelector(inputs[0]);
                 inputitem.value=values[0];
                 let event = new Event('input', { bubbles: true });
@@ -301,10 +306,11 @@ document.querySelector(".nuomiInvoiceFont.nuomi-icon-zhipu.inner-style.p-color")
                 tracker.setValue('');//上面文章的原代码其实用的是 lastValue 参数，但是我觉得好像没啥用，就直接使用空字符串代替
                 }
                 inputitem.dispatchEvent(event);
-                setTimeout(() => {getname()}, 600);
-                setTimeout(() => {getnames(inputs,values)}, 900);
+                setTimeout(() => {getname(inputitem)}, 150);
+                setTimeout(() => {getnames(inputs,values,a)}, 300);
+                return document.body.scrollWidth;
                 };
-                function getnames(inputs,values){
+                function getnames(inputs,values,a){
                 for(var i = 1; i < inputs.length; i++){
                 let inputitem=document.querySelector(inputs[i]);
                 inputitem.value=values[i];
@@ -314,12 +320,10 @@ document.querySelector(".nuomiInvoiceFont.nuomi-icon-zhipu.inner-style.p-color")
                 tracker.setValue('');//上面文章的原代码其实用的是 lastValue 参数，但是我觉得好像没啥用，就直接使用空字符串代替
                 }
                 inputitem.dispatchEvent(event);
-                if(i<4 &&i >0){
-                document.querySelector("#invoice-body > div.invoice-inner_1Z0ha > div.ant-table-wrapper.content_16ZIR > div > div > div > div > div.ant-table-body > table > tbody > tr.ant-table-row.s-crt.ant-table-row-level-0 > td:nth-child(8) > div > div > div").click();
                 }
-                }};
-                function getname(){
-                var inpEle = document.querySelector("#invoice-body > div.invoice-inner_1Z0ha > div.ant-table-wrapper.content_16ZIR > div > div > div > div > div.ant-table-body > table > tbody > tr:nth-child(1) > td:nth-child(2) > div > div > div > div > ul > li > div > input");
+                document.querySelector("#invoice-body > div.invoice-inner_1Z0ha > div.ant-table-wrapper.content_16ZIR > div > div > div > div > div.ant-table-body > table > tbody > tr:nth-child("+a+") > td:nth-child(10) > div > li > i").click();};
+                function getname(inputitem){
+                var inpEle = inputitem;
                 //inpEle.value = '宁波知马国际物流有限公司'  //仅仅是模拟回车，则不需要这样，这样给input框设置值也是不生效的，正确给input设置值的方式参考上面的
                 // 模拟回车
                 var events = document.createEvent('Event');
@@ -335,6 +339,11 @@ document.querySelector(".nuomiInvoiceFont.nuomi-icon-zhipu.inner-style.p-color")
                  });
                  inpEle.focus();
                  inpEle.dispatchEvent(events);};
-                 setTimeout(() => {getdingyi()}, 600);
-                 setTimeout(() => {document.querySelector("#invoice-body > div.invoice-inner_1Z0ha > div.ant-table-wrapper.content_16ZIR > div > div > div > div > div.ant-table-body > table > tbody > tr.ant-table-row.s-crt.ant-table-row-level-0 > td:nth-child(10) > div > li > i").click()},1200);
-                 ''')
+                 getdingyi();
+                 ''',self.js_callback)
+    def js_callback(self, result):
+        if result is None:
+            print()
+        else:
+            print(result)
+
